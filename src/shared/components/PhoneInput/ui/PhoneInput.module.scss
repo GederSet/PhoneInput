@@ -1,0 +1,36 @@
+.root {
+  padding: 30px 20px;
+
+  &__title {
+    font-weight: 600;
+    font-size: 12px;
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+
+  &__body {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+
+  &__separator {
+    color: #7d7d7d;
+  }
+
+  &__rows {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &__notify {
+    font-size: 12px;
+    line-height: 1;
+    color: #7d7d7d;
+  }
+}

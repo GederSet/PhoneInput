@@ -1,0 +1,42 @@
+{
+  "name": "form-phone-number",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "start": "webpack serve --env mode=development",
+    "build": "webpack",
+    "build:dev": "webpack --env mode=development",
+    "build:prod": "webpack --env mode=production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@types/webpack": "^5.28.5",
+    "@types/webpack-dev-server": "^4.7.1",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.5",
+    "mini-css-extract-plugin": "^2.9.4",
+    "sass": "^1.97.1",
+    "sass-loader": "^16.0.6",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "dependencies": {
+    "classnames": "^2.5.1",
+    "mobx": "^6.15.0",
+    "mobx-react-lite": "^4.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
