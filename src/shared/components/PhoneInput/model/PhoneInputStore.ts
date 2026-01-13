@@ -1,10 +1,10 @@
-import { makeObservable, observable } from 'mobx'
+import { action, makeObservable, observable } from 'mobx'
 import { DrowdownStore } from '../../Dropdown/model'
 
 type PhoneInputStatus = null | 'success' | 'error' | 'disabled'
 
 export class PhoneInputStore {
-  readonly status: PhoneInputStatus
+  status: PhoneInputStatus
   dropdown = new DrowdownStore()
 
   constructor() {
@@ -12,7 +12,12 @@ export class PhoneInputStore {
 
     makeObservable(this, {
       status: observable,
+      setStatus: action.bound,
     })
+  }
+
+  setStatus(status: PhoneInputStatus) {
+    this.status = status
   }
 
   destroy() {}

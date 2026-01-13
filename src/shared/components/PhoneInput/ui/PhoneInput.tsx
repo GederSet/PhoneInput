@@ -1,10 +1,12 @@
-import { observer, useLocalStore } from 'mobx-react-lite'
-import React, { ChangeEvent, KeyboardEvent, useRef } from 'react'
+import { formatPhoneByMask } from '@/shared/utils/formatPhoneByMask'
+import { getInitialDigits } from '@/shared/utils/getInitialDigits'
+import { observer } from 'mobx-react-lite'
+import React, { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react'
 import Dropdown from '../../Dropdown/ui'
 import ErrorIcon from '../../Icons/ErrorIcon'
 import SuccessIcon from '../../Icons/SuccessIcon'
 import PhoneNumber from '../../PhoneNumber'
-import { PhoneInputStore, usePhoneInputStore } from '../model'
+import { usePhoneInputStore } from '../model'
 import s from './PhoneInput.module.scss'
 
 export type MaskType = {
@@ -18,34 +20,44 @@ export type MaskType = {
 export type PhoneInputType = {
   masks: MaskType[]
   value: string
+  onChange?: (value: string) => void
 }
 
-const PhoneInput: React.FC<PhoneInputType> = ({ masks, value }) => {
+const PhoneInput: React.FC<PhoneInputType> = ({ masks, value, onChange }) => {
   const inputsRef = useRef<Array<HTMLInputElement | null>>([])
-  const { dropdown } = usePhoneInputStore()
-  const { status } = useLocalStore(() => new PhoneInputStore())
+  const { dropdown, status, setStatus } = usePhoneInputStore()
+
+  const { initialDigits, matchedOption } = getInitialDigits(value, masks)
+
+  const emitChange = () => {
+    if (!onChange) {
+      return
+    }
+
+    const rawDigits = inputsRef.current
+      .map((input) => input?.value ?? '')
+      .join('')
+    const digits = rawDigits.replace(/\D/g, '')
+
+    const { number: prefix, mask } = dropdown.getActiveOption
+    const formattedValue = formatPhoneByMask(digits, prefix, mask)
+
+    onChange(formattedValue)
+  }
+
+  useEffect(() => {
+    if (dropdown.getActiveOption.key !== matchedOption.key) {
+      dropdown.selectOption(matchedOption)
+    }
+
+    emitChange()
+  }, [dropdown, matchedOption, value])
 
   const handleKeyDown = (
     event: KeyboardEvent<HTMLInputElement>,
     index: number
   ) => {
     const { key } = event
-
-    // if (/^\d$/.test(key)) {
-    //   const current = event.currentTarget
-
-    //   if (current.value !== '') {
-    //     event.preventDefault()
-    //     current.value = key
-
-    //     const next = inputsRef.current[index + 1]
-    //     if (next) {
-    //       next.focus()
-    //     }
-
-    //     return
-    //   }
-    // }
 
     if (key === 'ArrowRight') {
       event.preventDefault()
@@ -75,6 +87,29 @@ const PhoneInput: React.FC<PhoneInputType> = ({ masks, value }) => {
       if (prev) {
         prev.focus()
       }
+
+      emitChange()
+    }
+
+    if (key === 'Enter') {
+      event.preventDefault()
+
+      const template = dropdown.getTemplate
+      const totalDigits = template.filter(
+        (item) => item.type === 'number'
+      ).length
+
+      const filled = inputsRef.current
+        .slice(0, totalDigits)
+        .filter((input) => input && input.value !== '').length
+
+      if (filled === totalDigits) {
+        setStatus('success')
+      } else {
+        setStatus('error')
+      }
+
+      emitChange()
     }
   }
 
@@ -106,6 +141,8 @@ const PhoneInput: React.FC<PhoneInputType> = ({ masks, value }) => {
     if (next) {
       next.focus()
     }
+
+    emitChange()
   }
 
   const renderPhone = () => {
@@ -124,6 +161,7 @@ const PhoneInput: React.FC<PhoneInputType> = ({ masks, value }) => {
               inputsRef.current[currentIndex] = el
             }}
             placeholder={item.value}
+            defaultValue={initialDigits?.[currentIndex] ?? ''}
             onKeyDown={(event) => handleKeyDown(event, currentIndex)}
             onChange={(event) => handleChange(event, currentIndex)}
           />

@@ -43,6 +43,7 @@
   &__shell {
     position: absolute;
     top: 100%;
+    z-index: 2;
     padding-top: 10px;
     opacity: 0;
     visibility: hidden;
