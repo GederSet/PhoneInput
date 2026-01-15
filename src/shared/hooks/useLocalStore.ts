@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { ILocalStore } from '../interfaces/ILocalStore'
 
-export const useLocalStore = <S extends ILocalStore = any>(
+export const useLocalStore = <S extends ILocalStore, E = unknown>(
   creator: () => S,
-  effect?: any
+  effect?: E,
 ): S => {
-  const isFirstRender = React.useRef(true)
-  const [store, setStore] = React.useState(creator)
+  const isFirstRender = React.useRef<boolean>(true)
+  const [store, setStore] = React.useState<S>(() => creator())
 
   React.useEffect(() => {
     return () => {
@@ -21,7 +21,7 @@ export const useLocalStore = <S extends ILocalStore = any>(
       return
     }
 
-    setStore((prevStore) => {
+    setStore(prevStore => {
       prevStore.destroy()
 
       return creator()

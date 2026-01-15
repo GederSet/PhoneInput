@@ -5,7 +5,7 @@ export function convertStringToArray(mask: string) {
   const resultArray: MaskToken[] = []
   const filteredString = mask.split(' ').join('').split('')
 
-  filteredString.forEach((char) => {
+  filteredString.forEach(char => {
     if (char === '*') {
       const label = String(i % 10)
       resultArray.push({

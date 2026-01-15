@@ -1,8 +1,11 @@
 import { createContext, useContext } from 'react'
 import { ILocalStore } from '../interfaces/ILocalStore'
 
-export const createContextLocalStore = <T extends ILocalStore>(
-  Constructor: new (...args: any[]) => T
+export const createContextLocalStore = <
+  T extends ILocalStore,
+  A extends unknown[] = [],
+>(
+  Constructor: new (...args: A) => T,
 ) => {
   const Context = createContext<T | null>(null)
 

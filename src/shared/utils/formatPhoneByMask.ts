@@ -1,7 +1,7 @@
 export const formatPhoneByMask = (
   digits: string,
   prefix: string,
-  mask: string
+  mask: string,
 ): string => {
   if (!digits.length) {
     return prefix

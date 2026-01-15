@@ -1,14 +1,16 @@
 import { action, makeObservable, observable } from 'mobx'
 import { DrowdownStore } from '../../Dropdown/model'
+import type { MaskType } from '../../PhoneInput/ui/PhoneInput'
 
 type PhoneInputStatus = null | 'success' | 'error' | 'disabled'
 
 export class PhoneInputStore {
   status: PhoneInputStatus
-  dropdown = new DrowdownStore()
+  dropdown: DrowdownStore
 
-  constructor() {
+  constructor(options: MaskType[]) {
     this.status = null
+    this.dropdown = new DrowdownStore(options)
 
     makeObservable(this, {
       status: observable,

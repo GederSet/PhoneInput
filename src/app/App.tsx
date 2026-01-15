@@ -1,35 +1,16 @@
-import {
-  PhoneInputStore,
-  PhoneInputStoreProvider,
-} from '@/shared/components/PhoneInput/model'
+import numbersData from '@/api/mocks/numbersData.json'
+import PhoneInput from '@/shared/components/PhoneInput/ui'
 import '@/shared/styles/index.scss'
-import PhoneInput from '../shared/components/PhoneInput/ui'
 
 const App = () => {
-  const store = new PhoneInputStore()
-  const options = store.dropdown.getOptions
-
-  const disabledStore = new PhoneInputStore()
-  const disabledOptions = disabledStore.dropdown.getOptions
-  disabledStore.setStatus('disabled')
+  const options = numbersData.data.items
 
   return (
-    <>
-      <PhoneInputStoreProvider store={store}>
-        <PhoneInput
-          masks={options}
-          value='+7 800 555 35 - 35'
-          onChange={console.log}
-        />
-      </PhoneInputStoreProvider>
-      <PhoneInputStoreProvider store={disabledStore}>
-        <PhoneInput
-          masks={disabledOptions}
-          value='+7 800 555 35 - 35'
-          onChange={console.log}
-        />
-      </PhoneInputStoreProvider>
-    </>
+    <PhoneInput
+      masks={options}
+      value="+7 800 555 35 - 35"
+      onChange={console.log}
+    />
   )
 }
 

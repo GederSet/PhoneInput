@@ -17,32 +17,12 @@ body {
   height: 100%;
   width: 100%;
   line-height: 1;
-  font-family: 'Open Sans';
-  font-weight: 400;
-  font-size: 16px;
+  font: 400 16px 'Open Sans';
   color: black;
   background-color: #f8f8f8;
   -ms-text-size-abjust: 100%;
   -moz-text-size-abjust: 100%;
   -webkit-text-size-abjust: 100%;
-}
-
-body._lock {
-  overflow: hidden;
-}
-
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  main {
-    flex: 1 1 auto;
-  }
-}
-
-[class*='__container'] {
-  max-width: 1200px;
-  padding: 0 15px;
-  margin: 0 auto;
 }
 
 a,
@@ -66,8 +46,7 @@ p {
   font-weight: inherit;
 }
 
-ul,
-ul li {
+ul {
   list-style: none;
 }
 

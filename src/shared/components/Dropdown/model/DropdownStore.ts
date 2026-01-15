@@ -1,4 +1,3 @@
-import numbersData from '@/app/api/mocks/numbersData.json'
 import { MaskToken } from '@/shared/types/maskToken'
 import { convertStringToArray } from '@/shared/utils/convertStringToArray'
 import { action, computed, makeObservable, observable } from 'mobx'
@@ -11,8 +10,8 @@ export class DrowdownStore {
   private _options: MaskType[]
   private _template: MaskToken[]
 
-  constructor() {
-    this._options = numbersData.data.items
+  constructor(options: MaskType[]) {
+    this._options = options
     this._activeOption = this._options[0]
     this._template = convertStringToArray(this._options[0].mask)
 
@@ -21,9 +20,9 @@ export class DrowdownStore {
       _activeOption: observable,
       _template: observable.ref,
 
-      getOptions: computed,
-      getActiveOption: computed,
-      getTemplate: computed,
+      options: computed,
+      activeOption: computed,
+      template: computed,
 
       setOption: action.bound,
       setTemplate: action.bound,
@@ -31,15 +30,15 @@ export class DrowdownStore {
     })
   }
 
-  get getOptions() {
+  get options() {
     return this._options
   }
 
-  get getActiveOption() {
+  get activeOption() {
     return this._activeOption
   }
 
-  get getTemplate() {
+  get template() {
     return this._template
   }
 

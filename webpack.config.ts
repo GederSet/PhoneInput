@@ -36,7 +36,18 @@ export default (env: EnvVariables) => {
         // Обычный CSS
         {
           test: /\.css$/i,
-          use: [MiniCssExtractPlugin.loader, 'css-loader'],
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: [['autoprefixer', {}]],
+                },
+              },
+            },
+          ],
         },
         // SCSS / SASS
         {
@@ -55,19 +66,46 @@ export default (env: EnvVariables) => {
                 },
               },
             },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: [['autoprefixer', {}]],
+                },
+              },
+            },
             // Compiles Sass to CSS
             'sass-loader',
           ],
         },
         {
-          test: /\.tsx?$/,
-          use: 'ts-loader',
+          test: /\.[jt]sx?$/,
           exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    targets: 'defaults',
+                  },
+                ],
+                [
+                  '@babel/preset-react',
+                  {
+                    runtime: 'automatic',
+                  },
+                ],
+                '@babel/preset-typescript',
+              ],
+            },
+          },
         },
       ],
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.jsx', '.js'],
       alias: {
         '@': path.resolve(__dirname, 'src'),
       },
