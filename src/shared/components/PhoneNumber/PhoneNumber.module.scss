@@ -1,0 +1,27 @@
+.root {
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 10px 4px;
+  max-width: 32px;
+  border: 1px solid #e0e4e8;
+  border-radius: 8px;
+  background-color: white;
+
+  &:focus {
+    border: 1px solid #3e66fb;
+  }
+
+  &_success {
+    border: 1px solid #9ce09d;
+  }
+
+  &_error {
+    border: 1px solid #f79b9b;
+  }
+
+  &_disabled {
+    background-color: #f0f1f3;
+  }
+}
