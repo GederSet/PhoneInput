@@ -15,14 +15,25 @@ export type PhoneInputType = {
   masks: MaskType[]
   value: string
   onChange?: (value: string) => void
+  disabled?: boolean
 }
 
-const PhoneInput: React.FC<PhoneInputType> = ({ masks, value, onChange }) => {
+const PhoneInput: React.FC<PhoneInputType> = ({
+  masks,
+  value,
+  onChange,
+  disabled,
+}) => {
   const store = useLocalStore(() => new PhoneInputStore(masks))
 
   return (
     <PhoneInputStoreProvider store={store}>
-      <PhoneInputDetail masks={masks} value={value} onChange={onChange} />
+      <PhoneInputDetail
+        masks={masks}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+      />
     </PhoneInputStoreProvider>
   )
 }

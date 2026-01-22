@@ -5,6 +5,7 @@ import {
   KeyboardEvent,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
 } from 'react'
 
@@ -15,35 +16,55 @@ export const useActionsPhoneInput = ({
   masks,
   value,
   onChange,
+  disabled,
 }: PhoneInputType) => {
   const inputsRef = useRef<Array<HTMLInputElement | null>>([])
-  const { dropdown, status, setStatus } = usePhoneInputStore()
+  const { dropdown, status, setStatus, digits, setDigits } =
+    usePhoneInputStore()
 
-  const { initialDigits, matchedOption } = getInitialDigits(value, masks)
+  const { initialDigits, matchedOption } = useMemo(
+    () => getInitialDigits(value, masks),
+    [value, masks],
+  )
 
-  const emitChange = useCallback(() => {
-    if (!onChange) {
-      return
+  useEffect(() => {
+    setDigits(initialDigits)
+  }, [initialDigits, setDigits])
+
+  useEffect(() => {
+    if (disabled) {
+      setStatus('disabled')
+    } else if (status === 'disabled') {
+      setStatus(null)
     }
+  }, [disabled, status, setStatus])
 
-    const rawDigits = inputsRef.current
-      .map(input => input?.value ?? '')
-      .join('')
-    const digits = rawDigits.replace(/\D/g, '')
+  const emitChange = useCallback(
+    (nextDigits: string[]) => {
+      if (!onChange) {
+        return
+      }
 
-    const { number: prefix, mask } = dropdown.activeOption
-    const formattedValue = formatPhoneByMask(digits, prefix, mask)
+      const rawDigits = nextDigits.join('')
+      const normalizedDigits = rawDigits.replace(/\D/g, '')
 
-    onChange(formattedValue)
-  }, [onChange, dropdown])
+      const { number: prefix, mask } = dropdown.activeOption
+      const formattedValue = formatPhoneByMask(normalizedDigits, prefix, mask)
+
+      onChange(formattedValue)
+    },
+    [onChange, dropdown],
+  )
 
   useEffect(() => {
     if (dropdown.activeOption.key !== matchedOption.key) {
       dropdown.selectOption(matchedOption)
     }
+  }, [dropdown, matchedOption, value])
 
-    emitChange()
-  }, [dropdown, matchedOption, value, emitChange])
+  useEffect(() => {
+    emitChange(initialDigits)
+  }, [dropdown.activeOption, initialDigits, emitChange])
 
   const handleKeyDown = (
     event: KeyboardEvent<HTMLInputElement>,
@@ -75,12 +96,15 @@ export const useActionsPhoneInput = ({
         current.value = ''
       }
 
+      const nextDigits = [...digits]
+      nextDigits[index] = ''
+      setDigits(nextDigits)
+      emitChange(nextDigits)
+
       const prev = inputsRef.current[index - 1]
       if (prev) {
         prev.focus()
       }
-
-      emitChange()
     }
 
     if (key === 'Enter') {
@@ -89,9 +113,9 @@ export const useActionsPhoneInput = ({
       const template = dropdown.template
       const totalDigits = template.filter(item => item.type === 'number').length
 
-      const filled = inputsRef.current
+      const filled = digits
         .slice(0, totalDigits)
-        .filter(input => input && input.value !== '').length
+        .filter(digit => digit !== '').length
 
       if (filled === totalDigits) {
         setStatus('success')
@@ -99,7 +123,7 @@ export const useActionsPhoneInput = ({
         setStatus('error')
       }
 
-      emitChange()
+      emitChange(digits)
     }
   }
 
@@ -127,12 +151,15 @@ export const useActionsPhoneInput = ({
 
     current.value = newDigit
 
+    const nextDigits = [...digits]
+    nextDigits[index] = newDigit
+    setDigits(nextDigits)
+    emitChange(nextDigits)
+
     const next = inputsRef.current[index + 1]
     if (next) {
       next.focus()
     }
-
-    emitChange()
   }
 
   return {

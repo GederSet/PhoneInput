@@ -6,11 +6,19 @@ const App = () => {
   const options = numbersData.data.items
 
   return (
-    <PhoneInput
-      masks={options}
-      value="+7 800 555 35 - 35"
-      onChange={console.log}
-    />
+    <>
+      <PhoneInput
+        masks={options}
+        value="+7 800 555 35 - 35"
+        onChange={console.log}
+      />
+      <PhoneInput
+        masks={options}
+        value="+7 800 555 35 - 35"
+        onChange={console.log}
+        disabled
+      />
+    </>
   )
 }
 

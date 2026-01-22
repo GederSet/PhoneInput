@@ -18,6 +18,7 @@ describe('PhoneInputStore', () => {
 
     expect(store.status).toBeNull()
     expect(store.dropdown).toBeInstanceOf(DrowdownStore)
+    expect(store.digits).toEqual([])
   })
 
   test('обновляет статус через setStatus', () => {
@@ -28,6 +29,17 @@ describe('PhoneInputStore', () => {
 
     store.setStatus('error')
     expect(store.status).toBe('error')
+  })
+
+  test('обновляет digits через setDigits', () => {
+    const store = new PhoneInputStore([...phoneInputMasks])
+
+    expect(store.digits).toEqual([])
+
+    const nextDigits = ['1', '2', '3']
+    store.setDigits(nextDigits)
+
+    expect(store.digits).toEqual(nextDigits)
   })
 })
 

@@ -23,9 +23,9 @@ const PhoneInputDetail: React.FC<PhoneInputType> = props => {
   const template = dropdown.template
 
   return (
-    <div className={s.root}>
-      <h2 className={s.root__title}>Введите номер телефона</h2>
-      <div className={s.root__body}>
+    <div className={s?.root}>
+      <h2 className={s?.root__title}>Введите номер телефона</h2>
+      <div className={s?.root__body}>
         <Dropdown
           options={masks}
           activeOption={dropdown.activeOption}

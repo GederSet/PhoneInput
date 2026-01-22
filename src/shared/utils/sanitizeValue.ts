@@ -1,5 +1,1 @@
-export const sanitizeValue = (value: string) =>
-  value
-    .split('')
-    .filter(char => char === '+' || /\d/.test(char))
-    .join('')
+export const sanitizeValue = (value: string) => value.replace(/[^\d+]/g, '')
